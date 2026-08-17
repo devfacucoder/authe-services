@@ -1,0 +1,23 @@
+# Dependencias (se instalarán dentro del contenedor con pnpm install)
+node_modules/
+.pnpm-store/
+
+# Archivos de Git
+.git/
+.gitignore
+
+# Variables de Entorno y Claves Privadas (se pasan mediante env_file o volúmenes)
+.env
+.env.*
+*.pem
+*.key
+
+# Logs
+logs/
+*.log
+
+# Documentación o archivos innecesarios para ejecución
+README.md
+Dockerfile
+docker-compose*.yml
+.vscode/

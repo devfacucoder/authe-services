@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  auth-service:
+    build: .
+    container_name: auth_service_app
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env  
+    environment:
+      # Sobrescribimos solo los HOSTS para que apunten a los nombres de los contenedores
+      REDIS_HOST: redis-server
+      DB_HOST: postgres-db
+    depends_on:
+      - redis-server
+      - postgres-db
+
+  redis-server:
+    image: redis:alpine
+    container_name: redis_app
+    ports:
+      - "6379:6379"
+
+  postgres-db:
+    image: postgres:16-alpine
+    container_name: postgres_app
+    env_file:
+      - .env  
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "5432:5432"
