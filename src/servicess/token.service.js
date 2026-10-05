@@ -4,7 +4,7 @@ import { PRIVATE_KEY, PUBLIC_KEY } from "../config/keys.js";
 
 
 export const generateAccessToken = (payload) => {
-    return jwt.sign(payload, PRIVATE_KEY, { algorithm: 'RS256', expiresIn: '15m' });
+    return jwt.sign(payload, PRIVATE_KEY, { algorithm: 'RS256', expiresIn: '50m' });
 }
 
 export const verifyToken = (token) => {

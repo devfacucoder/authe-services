@@ -4,7 +4,7 @@ import { redisClient } from '../config/redis.config.js';
 
 // Limitador estricto para rutas sensibles como /login y /register
 export const authRateLimiter = rateLimit({
-  // Almacenamiento en Redis
+
   store: new RedisStore({
     sendCommand: (...args) => redisClient.sendCommand(args),
     prefix: 'rate_limit:auth:', // Prefijo de las claves en Redis

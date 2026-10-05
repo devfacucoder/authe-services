@@ -13,12 +13,12 @@ export const UserModel = {
     },
     async findByEmail(email) {
         const text = `
-      SELECT id, email, password_hash, role, created_at 
+      SELECT id, email, password_hash, role, created_at, is_verified 
       FROM users 
       WHERE email = $1;
     `;
         const { rows } = await query(text, [email]);
-        return rows[0]; 
+        return rows[0];
     },
     async findById(id) {
         const text = `
@@ -28,6 +28,13 @@ export const UserModel = {
     `;
         const { rows } = await query(text, [id]);
         return rows[0];
+    },
+    async verifyUser(email) {
+        const text = `
+            UPDATE users SET is_verified = true WHERE email = $1;  
+        `
+        const { rows } = await query(text, [email])
+        return rows[0]
     }
 
 }

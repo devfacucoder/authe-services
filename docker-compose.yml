@@ -9,7 +9,6 @@ services:
     env_file:
       - .env  
     environment:
-      # Sobrescribimos solo los HOSTS para que apunten a los nombres de los contenedores
       REDIS_HOST: redis-server
       DB_HOST: postgres-db
     depends_on:
@@ -33,3 +32,9 @@ services:
       POSTGRES_DB: ${DB_NAME}
     ports:
       - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data # 
+
+
+volumes:
+  postgres_data:

@@ -8,7 +8,7 @@ import pool from './config/db.js';
 dotenv.config();
 
 const app = express();
-initDb(); // incia la db si no existe antes
+initDb(); 
 
 app.use(cors());
 app.use(express.json());
