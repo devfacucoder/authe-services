@@ -1,6 +1,7 @@
-import { registerUser, login } from "../servicess/auth.service.js"
+import { registerUser, login, istValidToChange, changePassword } from "../servicess/auth.service.js"
 import { logger } from "../config/logger.config.js";
-import { verifyEmail, verifyCode} from "../servicess/sendEmail.service.js"
+import { verifyEmail, verifyCode, sendUrlRecoverPassword } from "../servicess/sendEmail.service.js"
+import { body } from "express-validator";
 
 export const register = async (req, res) => {
   try {
@@ -68,7 +69,7 @@ export const veryFyEmail = async (req, res) => {
     }
 
     const email = await verifyEmail(emailForVerificar);
-    
+
     if (!email) {
       return res.status(404).json({ message: "el email no existe" })
     }
@@ -82,10 +83,10 @@ export const veryFyEmail = async (req, res) => {
 }
 export const verifyCodeCtrl = async (req, res) => {
   try {
-    const { emailForVerificar,code } = req.body
-    const verify = await verifyCode(emailForVerificar,code)
+    const { emailForVerificar, code } = req.body
+    const verify = await verifyCode(emailForVerificar, code)
 
-    if(!verify){
+    if (!verify) {
       return res.status(400).json({ message: "codigo incorrecto" })
     }
     res.status(200).json({ message: "codigo verificado", emailForVerificar })
@@ -93,6 +94,44 @@ export const verifyCodeCtrl = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "error en el envio del correo" })
     logger.error(error)
+
+  }
+}
+
+
+
+//! ENviar el correo de creacion del codigo que indica que se a empeza el cambio de contraseña
+export const passwrodChangeStart = async (req, res) => {
+  try {
+    const { emailForChange } = req.body;
+    const envio = await sendUrlRecoverPassword(emailForChange)
+    if (!envio) {
+      return res.status(404).json({ message: "el email no existe" })
+    }
+
+    res.status(200).json({ message: "se envio un correo a la direccion" })
+
+
+  } catch (error) {
+    res.status(504).json({ message: "error" })
+  }
+}
+
+
+export const recoverPassword = async (req, res) => {
+  try {
+    const { userEmail, newPassword, code } = req.body;
+
+    const pass = istValidToChange(userEmail, code)
+    if (!pass) {
+      return res.status(403).json({ message: "el codigo expiro o es incorrecto" })
+    }
+    const cambio = await changePassword(userEmail, newPassword)
+
+    res.status(200).json({ message: "la contraseña a sido cambiada" })
+  } catch (error) {
+    logger.info(error)
+    res.status(504).json({ message: "error" })
 
   }
 }

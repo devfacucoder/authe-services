@@ -35,6 +35,12 @@ export const UserModel = {
         `
         const { rows } = await query(text, [email])
         return rows[0]
+    },
+    async changePassword(email, newPassword) {
+        const text = 'UPDATE users SET password_hash = $1 WHERE email = $2;'
+        const { rows } = await query(text, [newPassword, email])
+
+        return rows[0];
     }
 
 }
